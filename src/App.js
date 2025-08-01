@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/tasks.json")
+    fetch(`${BASE_URL}/tasks.json`)
       .then((res) => res.json())
       .then((data) => setTasks(data))
       .catch((err) => console.error("タスクのロードに失敗しました:", err));
@@ -14,7 +16,7 @@ function App() {
   const handleAddTask = () => {
     if (newTaskTitle.trim() === "") return;
 
-    fetch("http://localhost:3000/tasks.json", {
+    fetch(`${BASE_URL}/tasks.json`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +31,7 @@ function App() {
       .catch((err) => console.error("タスクの追加に失敗しました:", err));
   };
   const handleDeleteTask = (id) => {
-    fetch(`http://localhost:3000/tasks/${id}.json`, {
+    fetch(`${BASE_URL}/tasks/${id}.json`, {
       method: "DELETE",
     })
       .then((res) => {
@@ -57,9 +59,9 @@ function App() {
 
       <ul>
         {tasks.length > 0 ? (
-          tasks.map((task) => (
+          tasks.map((task, index) => (
             <li key={task.id}>
-              ✅ {task.title}
+              ✅ {index + 1}. {task.title}
               <button
                 onClick={() => handleDeleteTask(task.id)}
                 style={{ marginLeft: "1rem", color: "red" }}
